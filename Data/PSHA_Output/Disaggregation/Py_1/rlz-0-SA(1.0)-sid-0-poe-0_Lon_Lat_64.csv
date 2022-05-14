@@ -1,0 +1,6 @@
+#,,"generated_by='OpenQuake engine 3.10.1', start_date='2022-02-02T17:32:26', checksum=3582624628, investigation_time=50.0, imt='SA', smlt_path='b1', gsimlt_path='b1_b31_b21_b71_b51_b41_b61', lon=12.38900000000001, lat=43.11, mag_bin_edges=[4.5, 5.0, 5.5, 6.0, 6.5, 7.0, 7.5, 8.0, 8.5, 9.0], dist_bin_edges=[0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0, 140.0, 150.0, 160.0, 170.0, 180.0, 190.0, 200.0], lon_bin_edges=[9.925254753343872, 12.38900000000001, 14.852745246656148], lat_bin_edges=[41.31136, 43.11, 44.90864], eps_bin_edges=[-3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0], tectonic_region_types=['Active Shallow Crust', 'Shield', 'Stable Shallow Crust', 'Subduction Deep', 'Subduction Inslab', 'Subduction Interface', 'Volcanic'], poe=0.7022158741141105"
+lon,lat,poe
+1.11571E+01,4.22107E+01,1.04648E-01
+1.11571E+01,4.40093E+01,2.83303E-01
+1.36209E+01,4.22107E+01,3.45882E-01
+1.36209E+01,4.40093E+01,2.90559E-01
