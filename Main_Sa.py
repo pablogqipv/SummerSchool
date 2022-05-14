@@ -1,6 +1,6 @@
 """
 Script used to select the records based on the Sa(T*) value. It is based (with some modifications) on the toolbox made
-    by Volkan: https://github.com/volkanozsarac/EzGM.git;
+    by Volkan Ozsarac: https://github.com/volkanozsarac/EzGM.git;
 
 Calculation of SSEs is from "A Computationally Efficient Ground-Motion Selection Algorithm for Matching a Target Response
     Spectrum Mean and Variance" Jayaram;
