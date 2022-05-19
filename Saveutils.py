@@ -6,6 +6,14 @@
 import os
 import scipy
 import warnings
+from scipy.io import loadmat
+import numpy as np
+
+from matplotlib import pyplot as plt
+from scipy import stats as st
+from scipy import interpolate
+
+
 
 def fxn():
     warnings.warn("deprecated", DeprecationWarning)
@@ -82,3 +90,25 @@ def saveMat(OutFolderName, name_mat,nIM,All_CS):
                                 'nstp_sel': nstp_sel, 'dt_sel': dt_sel, 'Mw_type': Mw_type, 'Mw_sel': Mw_sel,
                                 'Rjb_sel': Rjb_sel, 'Vs30_sel': Vs30_sel, 'SD_5_75_H1': SD_5_75_H1,
                                 'SD_5_75_H2': SD_5_75_H2})
+    
+def plot_select_recs(All_CS,mat_dir,T_star):
+    Fname1 = []
+    Fname2 = []
+    meanReq = []
+    covReq_fin = []
+    SF = []
+    Fname1.append(All_CS.rec_h1)
+    Fname2.append(All_CS.rec_h2)
+    meanReq.append(All_CS.mu_ln) 
+    SF.append(All_CS.rec_scale)
+    covReq_fin.append(All_CS.cov)
+    matfile = mat_dir
+    database = loadmat(matfile, squeeze_me=True)
+    if not T_star[0] in database['Periods'] and len(T_star) == 1:
+        f = interpolate.interp1d(database['Periods'], database['Sa_rotD50'], axis=1)
+        Sa_int = f(T_star[0])
+        Sa_int.shape = (len(Sa_int), 1)
+        Sa = np.append(database['Sa_rotD50'], Sa_int, axis=1)
+        Periods = np.append(database['Periods'], T_star[0])
+        database['Sa_rotD50'] = Sa[:, np.argsort(Periods)]
+        database['Periods'] = Periods[np.argsort(Periods)]
