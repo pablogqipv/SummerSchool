@@ -97,11 +97,11 @@ def plot_select_recs(All_CS,mat_dir,T_star):
     meanReq = []
     covReq_fin = []
     SF = []
-    Fname1.append(All_CS.rec_h1)
-    Fname2.append(All_CS.rec_h2)
-    meanReq.append(All_CS.mu_ln) 
-    SF.append(All_CS.rec_scale)
-    covReq_fin.append(All_CS.cov)
+    Fname1.append(All_CS[0].rec_h1)
+    Fname2.append(All_CS[0].rec_h2)
+    meanReq.append(All_CS[0].mu_ln) 
+    SF.append(All_CS[0].rec_scale)
+    covReq_fin.append(All_CS[0].cov)
     matfile = mat_dir
     database = loadmat(matfile, squeeze_me=True)
     if not T_star[0] in database['Periods'] and len(T_star) == 1:
