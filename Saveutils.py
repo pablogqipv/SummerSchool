@@ -112,3 +112,7 @@ def plot_select_recs(All_CS,mat_dir,T_star):
         Periods = np.append(database['Periods'], T_star[0])
         database['Sa_rotD50'] = Sa[:, np.argsort(Periods)]
         database['Periods'] = Periods[np.argsort(Periods)]
+        
+    for k in Fname1:
+        seq_num=database['FileName_1']==k
+        print(seq_num)
