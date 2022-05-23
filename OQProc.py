@@ -264,5 +264,8 @@ def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir, n_rows
                 fname = os.path.join(output_dir, 'Disaggregation_MReps_' + ims[idx1] + '.png')
                 plt.savefig(fname, format='png', dpi=600)
                 plt.show()
+        else:
+            print("just one")
+            
 
     return meanLst, modeLst, M, R, probs
