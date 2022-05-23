@@ -113,7 +113,7 @@ def hazard(poes, path_hazard_results, output_dir='Outputs', rlz='hazard_curve-me
     return imls
 
 
-def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir, n_rows=1,nIM, iplot=False):
+def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir,nIM, n_rows=1, iplot=False):
     """
     This scripts reads the results of the disaggregation
 
