@@ -113,7 +113,7 @@ def hazard(poes, path_hazard_results, output_dir='Outputs', rlz='hazard_curve-me
     return imls
 
 
-def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir,nIM, n_rows=1, iplot=False):
+def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir, n_rows=1, iplot=False):
     """
     This scripts reads the results of the disaggregation
 
@@ -201,11 +201,6 @@ def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir,nIM, n_
     min_eps = np.min(np.unique(np.asarray(eps)))  # get range of colorbars so we can normalize
     max_eps = np.max(np.unique(np.asarray(eps)))
 
-    
-    if len(nIM)==1:
-        Tr_i=Tr[nIM]
-        print(Tr_i)
-
     lon = lon[0]
     lat = lat[0]
 
@@ -213,64 +208,60 @@ def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir,nIM, n_
     if np.mod(n_Tr, n_rows):
         n_cols += 1
     if iplot:
-        if len(nIM)>1:
-            for idx1 in range(n_im):
-                fig = plt.figure(figsize=(19.2, 10.8))
-                for idx2 in range(n_Tr):
-                    i = idx1 * n_Tr + idx2
-                    ax1 = fig.add_subplot(n_rows, n_cols, idx2 + 1, projection='3d')
+        for idx1 in range(n_im):
+            fig = plt.figure(figsize=(19.2, 10.8))
+            for idx2 in range(n_Tr):
+                i = idx1 * n_Tr + idx2
+                ax1 = fig.add_subplot(n_rows, n_cols, idx2 + 1, projection='3d')
 
-                    # scale each eps to [0,1], and get their rgb values
-                    rgba = [cmap((k - min_eps) / max_eps / 2) for k in (np.unique(np.asarray(eps)))]
-                    num_triads_M_R_eps = len(R[i])
-                    Z = np.zeros(int(num_triads_M_R_eps / n_eps))
+                # scale each eps to [0,1], and get their rgb values
+                rgba = [cmap((k - min_eps) / max_eps / 2) for k in (np.unique(np.asarray(eps)))]
+                num_triads_M_R_eps = len(R[i])
+                Z = np.zeros(int(num_triads_M_R_eps / n_eps))
 
-                    for l in range(n_eps):
-                        X = np.array(R[i][np.arange(l, num_triads_M_R_eps, n_eps)])
-                        Y = np.array(M[i][np.arange(l, num_triads_M_R_eps, n_eps)])
+                for l in range(n_eps):
+                    X = np.array(R[i][np.arange(l, num_triads_M_R_eps, n_eps)])
+                    Y = np.array(M[i][np.arange(l, num_triads_M_R_eps, n_eps)])
 
-                        dx = np.ones(int(num_triads_M_R_eps / n_eps)) * dbin / 2
-                        dy = np.ones(int(num_triads_M_R_eps / n_eps)) * Mbin / 2
-                        dz = np.array(apoe_norm[i][np.arange(l, num_triads_M_R_eps, n_eps)]) * 100
+                    dx = np.ones(int(num_triads_M_R_eps / n_eps)) * dbin / 2
+                    dy = np.ones(int(num_triads_M_R_eps / n_eps)) * Mbin / 2
+                    dz = np.array(apoe_norm[i][np.arange(l, num_triads_M_R_eps, n_eps)]) * 100
 
-                        ax1.bar3d(X, Y, Z, dx, dy, dz, color=rgba[l], zsort='average', alpha=0.7, shade=True)
-                        Z += dz  # add the height of each bar to know where to start the next
+                    ax1.bar3d(X, Y, Z, dx, dy, dz, color=rgba[l], zsort='average', alpha=0.7, shade=True)
+                    Z += dz  # add the height of each bar to know where to start the next
 
-                    ax1.set_xlabel('Rjb [km]')
-                    ax1.set_ylabel('$M_{w}$')
-                    if np.mod(idx2 + 1, n_cols) == 1:
-                        ax1.set_zlabel('Hazard Contribution [%]')
-                        ax1.zaxis.set_rotate_label(False)  # disable automatic rotation
-                        ax1.set_zlabel('Hazard Contribution [%]', rotation=90)
-                    ax1.zaxis._axinfo['juggled'] = (1, 2, 0)
+                ax1.set_xlabel('Rjb [km]')
+                ax1.set_ylabel('$M_{w}$')
+                if np.mod(idx2 + 1, n_cols) == 1:
+                    ax1.set_zlabel('Hazard Contribution [%]')
+                    ax1.zaxis.set_rotate_label(False)  # disable automatic rotation
+                    ax1.set_zlabel('Hazard Contribution [%]', rotation=90)
+                ax1.zaxis._axinfo['juggled'] = (1, 2, 0)
 
-                    plt.title(
-                        '$T_{R}$=%s years\n$M_{mod}$=%s, $R_{mod}$=%s km, $\epsilon_{mod}$=%s\n$M_{mean}$=%s, $R_{mean}$=%s '
-                        'km, $\epsilon_{mean}$=%s'
-                        % ("{:.0f}".format(Tr[i]), "{:.2f}".format(modeLst[i][0]), "{:.0f}".format(modeLst[i][1]),
-                        "{:.1f}".format(modeLst[i][2]),
-                        "{:.2f}".format(meanLst[i][0]), "{:.0f}".format(meanLst[i][1]), "{:.1f}".format(meanLst[i][2])),
-                        fontsize=11, loc='right', va='top', y=0.95)
+                plt.title(
+                    '$T_{R}$=%s years\n$M_{mod}$=%s, $R_{mod}$=%s km, $\epsilon_{mod}$=%s\n$M_{mean}$=%s, $R_{mean}$=%s '
+                    'km, $\epsilon_{mean}$=%s'
+                    % ("{:.0f}".format(Tr[i]), "{:.2f}".format(modeLst[i][0]), "{:.0f}".format(modeLst[i][1]),
+                       "{:.1f}".format(modeLst[i][2]),
+                       "{:.2f}".format(meanLst[i][0]), "{:.0f}".format(meanLst[i][1]), "{:.1f}".format(meanLst[i][2])),
+                    fontsize=11, loc='right', va='top', y=0.95)
 
-                    mags.append(meanLst[i][0])
-                    dists.append(meanLst[i][1])
+                mags.append(meanLst[i][0])
+                dists.append(meanLst[i][1])
 
-                legend_elements = []
-                for j in range(n_eps):
-                    legend_elements.append(Patch(facecolor=rgba[n_eps - j - 1],
-                                                label='\u03B5 = %.2f' % (np.unique(np.asarray(eps))[n_eps - j - 1])))
+            legend_elements = []
+            for j in range(n_eps):
+                legend_elements.append(Patch(facecolor=rgba[n_eps - j - 1],
+                                             label='\u03B5 = %.2f' % (np.unique(np.asarray(eps))[n_eps - j - 1])))
 
-                fig.legend(handles=legend_elements, loc="lower center", bbox_to_anchor=(0.5, 0.05), borderaxespad=0.,
-                        ncol=n_eps)
-                plt.subplots_adjust(hspace=0.05, wspace=0.05)  # adjust the subplot to the right for the legend
-                fig.suptitle('Disaggregation of Seismic Hazard\nIntensity Measure: %s\nLatitude: %s, Longitude: %s' % (
-                    ims[idx1], "{:.2f}".format(lat), "{:.2f}".format(lon)), fontsize=14, weight='bold', ha='left', x=0.12,
-                            y=0.97)
-                fname = os.path.join(output_dir, 'Disaggregation_MReps_' + ims[idx1] + '.png')
-                plt.savefig(fname, format='png', dpi=600)
-                plt.show()
-        else:
-            print("just one")
-            
+            fig.legend(handles=legend_elements, loc="lower center", bbox_to_anchor=(0.5, 0.05), borderaxespad=0.,
+                       ncol=n_eps)
+            plt.subplots_adjust(hspace=0.05, wspace=0.05)  # adjust the subplot to the right for the legend
+            fig.suptitle('Disaggregation of Seismic Hazard\nIntensity Measure: %s\nLatitude: %s, Longitude: %s' % (
+                ims[idx1], "{:.2f}".format(lat), "{:.2f}".format(lon)), fontsize=14, weight='bold', ha='left', x=0.12,
+                         y=0.97)
+            fname = os.path.join(output_dir, 'Disaggregation_MReps_' + ims[idx1] + '.png')
+            plt.savefig(fname, format='png', dpi=600)
+            plt.show()
 
     return meanLst, modeLst, M, R, probs
