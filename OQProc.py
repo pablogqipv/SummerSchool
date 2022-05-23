@@ -113,7 +113,7 @@ def hazard(poes, path_hazard_results, output_dir='Outputs', rlz='hazard_curve-me
     return imls
 
 
-def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir, n_rows=1, iplot=False):
+def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir, n_rows=1,nIM, iplot=False):
     """
     This scripts reads the results of the disaggregation
 
@@ -201,9 +201,9 @@ def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir, n_rows
     min_eps = np.min(np.unique(np.asarray(eps)))  # get range of colorbars so we can normalize
     max_eps = np.max(np.unique(np.asarray(eps)))
 
-    print("ims="+str(ims))
-    if n_im==1:
-        Tr_i=Tr[ims]
+    
+    if len(nIM)==1:
+        Tr_i=Tr[nIM]
         print(Tr_i)
 
     lon = lon[0]
@@ -213,7 +213,7 @@ def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir, n_rows
     if np.mod(n_Tr, n_rows):
         n_cols += 1
     if iplot:
-        if n_im>1:
+        if len(nIM)>1:
             for idx1 in range(n_im):
                 fig = plt.figure(figsize=(19.2, 10.8))
                 for idx2 in range(n_Tr):
