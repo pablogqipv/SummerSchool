@@ -201,6 +201,11 @@ def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir, n_rows
     min_eps = np.min(np.unique(np.asarray(eps)))  # get range of colorbars so we can normalize
     max_eps = np.max(np.unique(np.asarray(eps)))
 
+    print("ims="+str(ims))
+    if n_im==1:
+        Tr_i=Tr[ims]
+        print(Tr_i)
+
     lon = lon[0]
     lat = lat[0]
 
