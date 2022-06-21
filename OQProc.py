@@ -123,10 +123,10 @@ def disagg_MReps(Mbin, dbin, poe_disagg, path_disagg_results, output_dir, n_rows
         disaggregation probability of exceedances
     path_disagg_results: str
         Path to the hazard results
-        :param iplot:
-        :param Mbin:
-        :param dbin:
-        :param n_rows:
+        :param iplot: to plot the outputs
+        :param Mbin: magnitude bins used in openquake calculations
+        :param dbin: distance bins used in openquake calculations
+        :param n_rows: rows of the plot
 
 
     """
