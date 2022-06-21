@@ -118,7 +118,6 @@ class CS:
 
     def Sa_avg(self, bgmpe, scenario, T):
         """
-        Adopted from the Matlab script of Mohsen
         GMPM of average spectral acceleration. The code will get as input the selected periods, Magnitude, distance and all
         other parameters of the selected GMPM (e.g. Boore & Atkinson, 2008) and will return the median and logarithmic
         spectral acceleration of the product of the Spectral accelerations at selected periods;
@@ -130,35 +129,19 @@ class CS:
         SPa_STD = np.zeros(n)
         MoC = np.zeros((n, n))
 
-        if self.bgmpe == 'Abrahamson':
+        for i in range(n):
+            SPa_Med[i], stddvs_lnSaT_star = bgmpe.get_mean_and_stddevs(scenario[0], scenario[1], scenario[2],
+                                                                        imt.SA(period=T[i]), [const.StdDev.TOTAL])
+            # convert to sigma_arb
+            # One should uncomment this line if the arbitary component is used for
+            # record selection.
+            # ro_xy = 0.79-0.23*np.log(T[k])
+            ro_xy = 1
+            SPa_STD[i] = np.log(((np.exp(stddvs_lnSaT_star[0][0]) ** 2) * (2 / (1 + ro_xy))) ** 0.5)
 
-            SPa_Med_all, stddvs_lnSaT_star = Unconditional_ASK14(T, scenario[0], self.Fhw, scenario[1], self.Vs30,
-                                                                 self.rake, self.Vs30flag, self.Region)
-            for i in range(n):
-                SPa_Med[i] = SPa_Med_all[i]
-                # convert to sigma_arb
-                # One should uncomment this line if the arbitary component is used for
-                # record selection.
-                # ro_xy = 0.79-0.23*np.log(T[k])
-                ro_xy = 1
-                SPa_STD[i] = np.log(((np.exp(stddvs_lnSaT_star[i]) ** 2) * (2 / (1 + ro_xy))) ** 0.5)
-                for j in range(n):
-                    rho = baker(T[i], T[j])
-                    MoC[i, j] = rho
-        else:
-            for i in range(n):
-                SPa_Med[i], stddvs_lnSaT_star = bgmpe.get_mean_and_stddevs(scenario[0], scenario[1], scenario[2],
-                                                                           imt.SA(period=T[i]), [const.StdDev.TOTAL])
-                # convert to sigma_arb
-                # One should uncomment this line if the arbitary component is used for
-                # record selection.
-                # ro_xy = 0.79-0.23*np.log(T[k])
-                ro_xy = 1
-                SPa_STD[i] = np.log(((np.exp(stddvs_lnSaT_star[0][0]) ** 2) * (2 / (1 + ro_xy))) ** 0.5)
-
-                for j in range(n):
-                    rho = baker(T[i], T[j])
-                    MoC[i, j] = rho
+            for j in range(n):
+                rho = baker(T[i], T[j])
+                MoC[i, j] = rho
 
         SPa_avg_meanLn = (1 / n) * sum(SPa_Med)  # logarithmic mean of Sa,avg
         SPa_avg_STD = 0
@@ -185,27 +168,16 @@ class CS:
         :return: rho, predicted correlation coefficient
         """
 
-        if self.bgmpe == 'Abrahamson':
-            rho = 0
-            _, UncSigmas = Unconditional_ASK14(Tc_avg, scenario[0], self.Fhw, scenario[1], self.Vs30, self.rake,
-                                               self.Vs30flag, self.Region)
-            for j in range(len(Tc_avg)):
-                rho_bj = baker(Ts, Tc_avg[j])  # standard correlation for period T_r[j] with other periods
-                rho = (rho_bj * UncSigmas[j]) + rho
+        rho = 0
+        for j in range(len(Tc_avg)):
+            rho_bj = baker(Ts, Tc_avg[j])  # standard correlation for period T_r[j] with other periods
+            _, UncSigmas = bgmpe.get_mean_and_stddevs(scenario[0], scenario[1], scenario[2],
+                                                        imt.SA(period=Tc_avg[j]),
+                                                        [const.StdDev.TOTAL])
+            rho = (rho_bj * UncSigmas[0][0]) + rho
 
-            _, Avg_sig = self.Sa_avg(bgmpe, scenario, Tc_avg)
-            rho = rho / (len(Tc_avg) * Avg_sig)
-        else:
-            rho = 0
-            for j in range(len(Tc_avg)):
-                rho_bj = baker(Ts, Tc_avg[j])  # standard correlation for period T_r[j] with other periods
-                _, UncSigmas = bgmpe.get_mean_and_stddevs(scenario[0], scenario[1], scenario[2],
-                                                          imt.SA(period=Tc_avg[j]),
-                                                          [const.StdDev.TOTAL])
-                rho = (rho_bj * UncSigmas[0][0]) + rho
-
-            _, Avg_sig = self.Sa_avg(bgmpe, scenario, Tc_avg)
-            rho = rho / (len(Tc_avg) * Avg_sig)
+        _, Avg_sig = self.Sa_avg(bgmpe, scenario, Tc_avg)
+        rho = rho / (len(Tc_avg) * Avg_sig)
 
         return rho
 
